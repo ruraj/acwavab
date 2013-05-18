@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ACWAVAB</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Select the HOST</string>
+    <string name="defaulthost">192.168.0.101</string>
+    <string name="defaultuser">ruraj</string>
+    <string name="defaultpassword">belief</string>
+    <string name="defaultcommand">ls /home/ruraj</string>
+
+</resources>
