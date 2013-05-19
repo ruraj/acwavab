@@ -107,6 +107,18 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:text="Send" />
+	        
+	        <TextView
+	            android:id="@+id/text2"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="Select Video Host" />
+
+	        <EditText
+	            android:id="@+id/video_host"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:text="192.168.0.100" />
 	
 	        <LinearLayout
 	            android:layout_width="match_parent"

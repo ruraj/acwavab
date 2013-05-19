@@ -1,7 +1,9 @@
 package com.dteam.acwavab;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.security.PublicKey;
 import java.util.Timer;
@@ -31,12 +33,16 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class MainActivity extends Activity {
 	
     String user="ruraj", host="192.168.0.101", password="belief";
-
+    String video_host = "192.168.0.100";
+    
+    ToggleButton toggleVideo = null;
+    
     SSHClient ssh = new SSHClient();
     Session session;
     Thread sshthread, commandThread;
@@ -52,6 +58,8 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		Log.i("ACW", "Creating and starting thread...");		
+		
+		final ImageView camera = (ImageView) findViewById(R.id.camera);
 		
 		Button stop = (Button) findViewById(R.id.stop_ssh);
 		stop.setOnClickListener(new OnClickListener(){
@@ -126,51 +134,57 @@ public class MainActivity extends Activity {
 			}
 		});		
 		
-		ToggleButton toggleVideo = (ToggleButton) findViewById(R.id.toggleVideo);
+		toggleVideo = (ToggleButton) findViewById(R.id.toggleVideo);
 		toggleVideo.setChecked(false);
 		toggleVideo.setOnCheckedChangeListener(new OnCheckedChangeListener(){
 			@Override
 			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
 				if (!arg1){
 					pause = true;
-					videoOn = false;
+					videoOn = false;					
 				}
 				else{
 					synchronized(getImage){
-						if (pause)
+						if (pause){
+							EditText video_hostT = (EditText) findViewById(R.id.video_host);
+							video_host = video_hostT.getText().toString();							
+							
+							pause = false;
+							videoOn = true;
+							
 							getImage.notify();
-					}
-					pause = false;
-					videoOn = true;
+						}
+					}					
 				}
 			}
 			
-		});
-		
-		final ImageView camera = (ImageView) findViewById(R.id.camera);
+		});		
 		
 		getImage = new Thread(new Runnable(){
 			@Override
 			public void run(){
 				cameraTimer.schedule(new TimerTask(){
 					@Override
-					public void run(){
-						if (pause){
-							synchronized(getImage){
-								try {
-									getImage.wait();
-								} catch (InterruptedException e) {
-									e.printStackTrace();
-								}
-							}
-						}
+					public void run(){						
 						try {
-							URL	thumb_u = new URL("http://192.168.0.100:8080/shot.jpg");
+							URL	thumb_u = new URL("http://"+video_host+":8080/shot.jpg");
 							final Drawable thumb_d = Drawable.createFromStream(thumb_u.openStream(), "src");
 							runOnUiThread(new Runnable(){
 								@Override
 								public void run(){
-									camera.setImageDrawable(thumb_d);
+									synchronized(camera){
+										if (pause){
+											synchronized(getImage){
+												try {
+													camera.setImageResource(R.drawable.ic_launcher);
+													getImage.wait();
+												} catch (InterruptedException e) {
+													e.printStackTrace();
+												}
+											}
+										}
+										camera.setImageDrawable(thumb_d);
+									}
 								}
 							});							
 						} catch (MalformedURLException e) {
@@ -230,19 +244,17 @@ public class MainActivity extends Activity {
 	@Override
 	public void onPause(){		
 
-		pause = true;
+		videoOn = false;
+		toggleVideo.setChecked(false);
 
 		super.onPause();
 	}
 	
 	@Override
 	public void onResume(){		
-		synchronized(getImage){
-			if (pause && videoOn){
-				getImage.notify();
-				pause = false;
-			}
-		}		
+		
+		if (videoOn)
+			toggleVideo.setChecked(true);
 		
 		super.onResume();
 	}
