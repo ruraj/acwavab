@@ -19,16 +19,19 @@ import net.schmizz.sshj.userauth.UserAuthException;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.graphics.BitmapFactory;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.VideoView;
+import android.widget.ToggleButton;
 
 public class MainActivity extends Activity {
 	
@@ -40,6 +43,8 @@ public class MainActivity extends Activity {
     
     String command = "touch /home/ruraj/hello";
     Timer cameraTimer = new Timer();    
+    Thread getImage = null;
+    boolean pause = true, videoOn = false;
     
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -121,13 +126,44 @@ public class MainActivity extends Activity {
 			}
 		});		
 		
+		ToggleButton toggleVideo = (ToggleButton) findViewById(R.id.toggleVideo);
+		toggleVideo.setChecked(false);
+		toggleVideo.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+			@Override
+			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
+				if (!arg1){
+					pause = true;
+					videoOn = false;
+				}
+				else{
+					synchronized(getImage){
+						if (pause)
+							getImage.notify();
+					}
+					pause = false;
+					videoOn = true;
+				}
+			}
+			
+		});
+		
 		final ImageView camera = (ImageView) findViewById(R.id.camera);
-		cameraTimer.schedule(new TimerTask(){
+		
+		getImage = new Thread(new Runnable(){
 			@Override
 			public void run(){
-				Thread getImage = new Thread(new Runnable(){
+				cameraTimer.schedule(new TimerTask(){
 					@Override
 					public void run(){
+						if (pause){
+							synchronized(getImage){
+								try {
+									getImage.wait();
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+							}
+						}
 						try {
 							URL	thumb_u = new URL("http://192.168.0.100:8080/shot.jpg");
 							final Drawable thumb_d = Drawable.createFromStream(thumb_u.openStream(), "src");
@@ -141,12 +177,12 @@ public class MainActivity extends Activity {
 							e.printStackTrace();
 						} catch (IOException e) {
 							e.printStackTrace();
-						}
-					}
-				});
-				getImage.start();
+						}								
+					}				
+				}, 0, 40);
 			}
-		}, 0, 50);
+		});
+		getImage.start();
 	}
 
 	public void sendCMD()
@@ -182,37 +218,32 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
-//	@Override
-//	public void onPause(){
-//		cameraTimer.cancel();
-//	}
+	public boolean onOptionsItemSelected(MenuItem item){
+		switch (item.getItemId()){
+		case R.id.action_settings:
+			startActivity(new Intent(this, Settings.class));
+		    return true;
+		}
+		return true;
+	}
 	
-//	@Override
-//	public void onResume(){
-//		cameraTimer.schedule(new TimerTask(){
-//			@Override
-//			public void run(){
-//				Thread getImage = new Thread(new Runnable(){
-//					@Override
-//					public void run(){
-//						try {
-//							URL	thumb_u = new URL("http://192.168.0.100:8080/shot.jpg");
-//							final Drawable thumb_d = Drawable.createFromStream(thumb_u.openStream(), "src");
-//							runOnUiThread(new Runnable(){
-//								@Override
-//								public void run(){
-//									camera.setImageDrawable(thumb_d);
-//								}
-//							});							
-//						} catch (MalformedURLException e) {
-//							e.printStackTrace();
-//						} catch (IOException e) {
-//							e.printStackTrace();
-//						}
-//					}
-//				});
-//				getImage.start();
-//			}
-//		}, 0, 50);
-//	}
+	@Override
+	public void onPause(){		
+
+		pause = true;
+
+		super.onPause();
+	}
+	
+	@Override
+	public void onResume(){		
+		synchronized(getImage){
+			if (pause && videoOn){
+				getImage.notify();
+				pause = false;
+			}
+		}		
+		
+		super.onResume();
+	}
 }

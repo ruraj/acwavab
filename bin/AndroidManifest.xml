@@ -25,6 +25,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.dteam.acwavab.Settings"
+            android:label="Settings"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|keyboardHidden" >
+        </activity>
     </application>
 
 </manifest>

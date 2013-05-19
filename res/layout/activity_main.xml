@@ -12,83 +12,126 @@
         android:id="@+id/camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/stop_ssh"
-        android:layout_alignLeft="@+id/text1"
-        android:layout_alignRight="@+id/start_ssh"
-        android:layout_alignTop="@+id/text1"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/slidingDrawer1"
         android:src="@drawable/ic_launcher" />
 
-    <TextView
-        android:id="@+id/text1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+    <SlidingDrawer
+        android:id="@+id/slidingDrawer1"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:content="@+id/content"
+        android:handle="@+id/handle" >
 
-    <Button
-        android:id="@+id/stop_ssh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/text1"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="16dp"
-        android:text="Close" />
+        <Button
+            android:id="@+id/handle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Settings" />
 
-    <Button
-        android:id="@+id/start_ssh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/stop_ssh"
-        android:layout_alignBottom="@+id/stop_ssh"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="15dp"
-        android:text="Start" />
+        <LinearLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >         
 
-    <EditText
-        android:id="@+id/ssh_host"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/text1"
-        android:layout_below="@+id/text1"
-        android:text="@string/defaulthost"
-        android:ems="10" />
-
-    <EditText
-        android:id="@+id/ssh_user"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/ssh_host"
-        android:layout_alignBottom="@+id/ssh_host"
-        android:layout_toRightOf="@+id/ssh_host"
-        android:text="@string/defaultuser"
-        android:ems="10" />
-
-    <EditText
-        android:id="@+id/ssh_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/ssh_user"
-        android:layout_alignBottom="@+id/ssh_user"
-        android:layout_toRightOf="@+id/ssh_user"
-        android:text="@string/defaultpassword"
-        android:ems="10"
-        android:inputType="textPassword" />
-
-    <EditText
-        android:id="@+id/ssh_command"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/ssh_host"
-        android:layout_below="@+id/ssh_host"
-        android:layout_marginTop="27dp"
-        android:text="@string/defaultcommand"
-        android:ems="10" />
-
-    <Button
-        android:id="@+id/ssh_send"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/ssh_user"
-        android:layout_alignTop="@+id/ssh_command"
-        android:text="Send" />
+	        <TextView
+	            android:id="@+id/text1"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/hello_world" />
+	
+	        <EditText
+	            android:id="@+id/ssh_host"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignLeft="@+id/text1"
+	            android:layout_below="@+id/text1"
+	            android:ems="10"
+	            android:text="@string/defaulthost" />
+	
+	        <EditText
+	            android:id="@+id/ssh_user"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignLeft="@+id/camera"
+	            android:layout_below="@+id/ssh_host"
+	            android:ems="10"
+	            android:text="@string/defaultuser" />
+	
+	        <EditText
+	            android:id="@+id/ssh_password"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignLeft="@+id/camera"
+	            android:layout_below="@+id/ssh_user"
+	            android:ems="10"
+	            android:inputType="textPassword"
+	            android:text="@string/defaultpassword" />
+	
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:orientation="horizontal" >
+	            
+		        <Button
+		            android:id="@+id/start_ssh"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:text="Connect" />
+		        <Button
+		            android:id="@+id/stop_ssh"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_marginBottom="16dp"
+		            android:text="Disconnect" />
+		        
+	        </LinearLayout>
+	
+	        <EditText
+	            android:id="@+id/ssh_command"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignLeft="@+id/camera"
+	            android:layout_centerVertical="true"
+	            android:ems="10"
+	            android:text="@string/defaultcommand" >
+	
+	            <requestFocus />
+	        </EditText>
+	
+	        <Button
+	            android:id="@+id/ssh_send"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="Send" />
+	
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:orientation="horizontal" >
+	
+	            <ToggleButton
+	                android:id="@+id/toggleVideo"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Video"
+	                android:checked="false"
+	                android:textOn="Video On"
+	                android:textOff="Video Off" />
+	
+	            <ToggleButton
+	                android:id="@+id/toggleControls"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Controls"
+	                android:textOn="Controls On"
+	                android:textOff="Controls off" />
+	
+	        </LinearLayout>
+        </LinearLayout>
+    </SlidingDrawer>
 
 </RelativeLayout>
