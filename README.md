@@ -9,8 +9,13 @@ Raspberry Pi camera with encoding and transmission through UDP socks.
 #Depends:
 
 Bounty Castle Provider: bcprov-jdk15on-148.jar
+
 Java Secure Channel: jsch-0.1.50.jar
+
 Simple Logging Facade for Java (SLF4J): slf4j-simple-1.7.5.jar
+
 Bounty Castle PKIX(Non-Provider): bcpkix-jdk15on-148.jar
+
 Configurable Java ping library: jpingy0_1-alpha.jar
+
 Simple Logging Facade for Java (SLF4J): slf4j-api-1.7.5.jar
