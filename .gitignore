@@ -1,5 +1,9 @@
 bin/
-.settings/
 gen/
-out/
 .idea/
+libs/
+out/
+.settings/
+project.properties
+proguard-project.txt
+ACWAVAB.iml 
