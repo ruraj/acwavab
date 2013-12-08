@@ -4,10 +4,10 @@
     <string name="app_name">ACWAVAB</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Select the SSH HOST</string>
-    <string name="defaulthost">192.168.0.101</string>
-    <string name="defaultuser">ruraj</string>
-    <string name="defaultpassword">belief</string>
-    <string name="defaultcommand">ls /home/ruraj</string>
+    <string name="defaulthost">10.0.0.1</string>
+    <string name="defaultuser">pi</string>
+    <string name="defaultpassword">raspberry</string>
+    <string name="defaultcommand">ls /home/</string>
     <string name="pref_ssh">SSH</string>
     <string name="pref_ssh_host">Host IP</string>
     <string name="pref_ssh_user">User</string>
